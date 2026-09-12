@@ -1,0 +1,38 @@
+{
+  "rows": 13979592,
+  "control_n": 2096937,
+  "treatment_n": 11882655,
+  "treatment_share": 0.8500001287591226,
+  "srm_vs_85pct": {
+    "chi_square": 1.8177758481483255e-06,
+    "p_value": 0.9989242531220275
+  },
+  "visit_effect": {
+    "control_rate": 0.03820095691954503,
+    "treatment_rate": 0.048543360048743316,
+    "absolute_lift": 0.010342403129198284,
+    "relative_lift": 0.27073675539019615,
+    "z_stat": 70.68518392751429,
+    "p_value": 0.0,
+    "ci_95_low": 0.010055628213713731,
+    "ci_95_high": 0.010629178044682837
+  },
+  "conversion_effect": {
+    "control_rate": 0.0019375880152813366,
+    "treatment_rate": 0.0030894610674129645,
+    "absolute_lift": 0.0011518730521316279,
+    "relative_lift": 0.594488117725262,
+    "z_stat": 33.51226743420042,
+    "p_value": 0.0,
+    "ci_95_low": 0.0010845057902364738,
+    "ci_95_high": 0.001219240314026782
+  },
+  "sample_size_per_arm_for_10pct_relative_conversion_lift": 848466,
+  "regression_adjusted_conversion_ate_1m_sample": 0.0007652839680337267,
+  "heterogeneous_effect_by_f0_quartile": [
+    {"f0_quartile":"Q1","control_conversion":0.001488324262308844,"treatment_conversion":0.0018696384312651795,"conversion_lift":0.00038131416895633547,"control_visit":0.05163838092706337,"treatment_visit":0.05333399707252723,"visit_lift":0.0016956161454638602},
+    {"f0_quartile":"Q2","control_conversion":0.005779877826151011,"treatment_conversion":0.009638119508420393,"conversion_lift":0.0038582416822693817,"control_visit":0.07641310219515789,"treatment_visit":0.1127091780892943,"visit_lift":0.036296075894136415},
+    {"f0_quartile":"Q3","control_conversion":0.0006094122873464366,"treatment_conversion":0.0008031903908242236,"conversion_lift":0.00019377810347778702,"control_visit":0.016163664219525115,"treatment_visit":0.018427222494182428,"visit_lift":0.002263558274657313},
+    {"f0_quartile":"Q4","control_conversion":0.0003471259293636465,"treatment_conversion":0.00044791790690120744,"conversion_lift":0.00010079197753756097,"control_visit":0.01184189923160657,"treatment_visit":0.012687072340428403,"visit_lift":0.0008451731088218329}
+  ]
+}
