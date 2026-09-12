@@ -1,0 +1,25 @@
+{
+  "raw_rows": 1067371,
+  "raw_unique_invoices": 53628,
+  "cancelled_invoices": 8292,
+  "invoice_cancellation_rate": 0.1546207205191318,
+  "clean_sales_rows": 805549,
+  "completed_orders": 36969,
+  "unique_customers": 5878,
+  "date_min": "2009-12-01 07:45:00",
+  "date_max": "2011-12-09 12:50:00",
+  "revenue_gbp": 17743429.178000003,
+  "average_order_value_gbp": 479.12481241055275,
+  "repeat_customer_rate": 0.7238856753997959,
+  "top_10pct_customer_revenue_share": 0.6392565024050505,
+  "top_country": "United Kingdom",
+  "top_country_revenue_share": 0.8297802735479771,
+  "retention_by_month_index": {
+    "1": 0.23145299145299145,
+    "3": 0.24512688488414858,
+    "6": 0.21781392580837136,
+    "12": 0.22339935513588208
+  },
+  "peak_revenue_month": "2010-11",
+  "peak_month_revenue_gbp": 1172336.042
+}
