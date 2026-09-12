@@ -13,13 +13,13 @@ These numbers were computed by the repository's GitHub Actions workflow from the
 - Repeat-customer rate: **72.39%**
 - Top 10% of customers contribute **63.93%** of completed-sales revenue.
 - Largest country: **United Kingdom**, contributing **82.98%** of revenue.
-- Month-1 / Month-3 / Month-6 retention: **23.15% / 24.51% / 21.78%**.
+- Month-1 / Month-3 / Month-6 / Month-12 retention: **23.15% / 24.51% / 21.78% / 22.34%**.
 - Peak revenue month: **2010-11** at **£1,172,336**.
 
 ### Product takeaways
 
 1. **Customer value is concentrated.** The top-decile revenue share quantifies why lifecycle/retention work should focus on high-value repeat buyers, not only top-of-funnel acquisition.
-2. **Retention decays materially over time.** Cohort retention is more decision-useful than raw monthly active-customer counts because it separates growth from repeat behavior.
+2. **Longer-term cohort retention settles in the low-20% range.** Month-1 through Month-12 retention stays roughly 22–25%; this is more decision-useful than raw monthly active-customer counts because it separates cohort growth from repeat behavior.
 3. **Cancellations are a guardrail.** Revenue reporting should exclude canceled invoices from realized sales while cancellation rate is monitored separately as a product/operations quality metric.
 4. **Geographic concentration matters.** Country-level revenue concentration limits how safely aggregate patterns can be generalized to every market.
 
@@ -44,11 +44,11 @@ The Q2 segment shows materially larger response than the other quartiles. This i
 
 ### Experiment takeaways
 
-1. **Statistical significance is not the same as product significance.** With millions of observations, tiny effects can be precisely estimated; launch decisions should use absolute lift and business value, not p-value alone.
+1. **Statistical significance is not the same as product significance.** With millions of observations, tiny effects can be precisely estimated; decisions should use absolute lift and business value, not p-value alone.
 2. **Rare conversion outcomes require large samples.** Power calculations explain why conversion experiments need far more traffic than higher-base-rate engagement metrics such as visits.
-3. **Average treatment effects hide heterogeneity.** The f0 quartile analysis shows a much stronger response in Q2, motivating targeted follow-up testing.
+3. **Average treatment effects can hide heterogeneity.** The f0 quartile analysis shows a much stronger response in Q2, motivating targeted follow-up testing.
 4. **Randomized and observational analyses answer different questions.** Retail transaction cohorts diagnose behavior; Criteo randomization supports causal treatment-effect estimates.
 
 ## Interview narrative
 
-Business framing → define product health metrics → validate transaction semantics/cancellations → build customer cohorts → quantify retention/value concentration → validate experiment assignment → estimate treatment effects with uncertainty → check power/heterogeneity → translate results into launch and targeting decisions.
+Business framing → define product health metrics → validate transaction semantics/cancellations → build customer cohorts → quantify retention/value concentration → validate experiment assignment → estimate treatment effects with uncertainty → check power/heterogeneity → translate results into rollout and targeting decisions.
