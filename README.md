@@ -1,195 +1,147 @@
-# Customer Sales Analytics Dashboard
+# E-commerce Product Analytics & Experimentation Platform
 
-An interactive Tableau business-intelligence project that converts transaction-level retail data into a decision-oriented view of revenue, customer segments, geography, demographics, discounts, and purchasing behavior.
+A reproducible Product Data Science portfolio project built around two public datasets:
 
-## 1. Business Goal
+- **UCI Online Retail II** for real transaction-level product analytics, customer cohorts, retention, revenue, and cancellation behavior.
+- **Criteo Uplift** for randomized incrementality experiments with treatment assignment and conversion/visit outcomes.
 
-The practical question is:
+The project mirrors an industry Product Data Scientist workflow:
 
-> How can transaction-level sales data be summarized so that a business user can quickly understand where revenue comes from, which customer segments matter, and how purchasing patterns vary across time and geography?
+`raw transactions -> validated analytics tables -> SQL product metrics -> cohort/retention analysis -> experiment QA -> treatment-effect estimation -> heterogeneous-effect analysis -> business recommendation`
 
-The dashboard is designed to support exploratory business analysis rather than statistical prediction. It emphasizes interpretable KPIs and segment comparisons that can be used to identify revenue concentration, customer patterns, and possible areas for deeper investigation.
+## Business questions
 
-## 2. Data
+### Product analytics
+- How much revenue is generated and how does it change over time?
+- What share of orders are cancellations/returns?
+- Which countries, products, and customers drive revenue concentration?
+- How do customer cohorts retain and generate revenue over time?
+- How do repeat-purchase behavior and order frequency evolve?
 
-The Tableau workbook connects to a transaction-level dataset containing fields such as:
+### Experimentation
+- Is treatment allocation balanced?
+- What are treatment effects on visit and conversion?
+- What are absolute lift, relative lift, confidence intervals, and statistical significance?
+- How large would a future experiment need to be?
+- Does treatment impact vary across user segments/features?
+- Would the result justify launch, targeted rollout, or another experiment?
 
-- order ID and order date
-- order status
-- SKU / item ID
-- quantity ordered
-- unit price and transaction value
-- discount amount and discount percentage
-- total revenue
-- product category
-- payment method
-- customer ID
-- age and gender
-- city, county, state, ZIP code, and region
-- customer tenure fields
+## Why two datasets?
 
-The workbook schema also contains identifying fields that are not analytically necessary for the portfolio presentation. The analysis therefore focuses on aggregated business metrics rather than exposing person-level information.
+Online Retail II is observational commerce data and is excellent for product-health analysis, but it has no randomized treatment assignment. Criteo Uplift contains real randomized incrementality-test data but anonymizes product context. Keeping these workstreams separate avoids pretending observational differences are causal.
 
-## 3. Data Preparation and Feature Engineering
+## Architecture
 
-### Age Binning
+```text
+UCI Online Retail II                    Criteo Uplift
+        |                                    |
+        v                                    v
+transaction validation                 experiment QA
+        |                                    |
+        v                                    v
+DuckDB analytics layer                 ATE / confidence intervals
+        |                                    |
+        v                                    v
+SQL marts: revenue, cohort,            regression adjustment
+retention, repeat purchase                  |
+        |                                    v
+        |                               heterogeneous effects
+        \____________________________________/
+                         |
+                         v
+                 decision-oriented README
+```
 
-The Tableau workbook creates 10-year age bins and labels ranges such as `<20`, `20-30`, `30-40`, and so on.
-
-Conceptually, for customer age $a_i$, the segment assignment is
-
-$$
-B(a_i)=\left\lfloor\frac{a_i}{10}\right\rfloor.
-$$
-
-Binning is useful here because comparing every exact age would create a noisy visualization; grouped ranges make demographic differences easier to interpret.
-
-### Gender-Specific Revenue
-
-The workbook defines calculated fields equivalent to
-
-$$
-R_i^{(F)}=
-\begin{cases}
-\text{Total}_i,&\text{Gender}_i=F,\\
-0,&\text{otherwise},
-\end{cases}
-$$
-
-and
-
-$$
-R_i^{(M)}=
-\begin{cases}
-\text{Total}_i,&\text{Gender}_i=M,\\
-0,&\text{otherwise}.
-\end{cases}
-$$
-
-This allows male and female revenue to be compared across product categories in a common view.
-
-## 4. Core KPI Definitions
-
-### Total Revenue
-
-For transaction-level totals $T_i$,
-
-$$
-R_{\text{total}}=\sum_{i=1}^{N}T_i.
-$$
-
-This is the headline measure shown in the dashboard.
-
-### Monthly Revenue
-
-For month $m$,
-
-$$
-R_m=\sum_{i:\,\text{month}(i)=m}T_i.
-$$
-
-The workbook includes a `Month-Wise Revenue` view so that seasonality and revenue changes over time can be inspected visually.
-
-### Segment Revenue
-
-For any segment $g$—for example category, region, state, age group, or gender—
-
-$$
-R_g=\sum_{i\in g}T_i.
-$$
-
-### Revenue Share
-
-A segment's contribution to overall revenue can be interpreted as
-
-$$
-\text{RevenueShare}_g=
-\frac{R_g}{\sum_h R_h}.
-$$
-
-This is useful because absolute revenue and relative importance answer different questions: a large segment may lead in dollars but still be shrinking in share.
-
-## 5. Dashboard Views
-
-The workbook contains several named analyses, including:
-
-- **Total Revenue** — top-line KPI
-- **Month-Wise Revenue** — revenue trend over time
-- **Age-Wise Sales Analysis** — revenue patterns across age bands
-- **Gender-Wise Sales Analysis** — gender-level comparison by category
-- **Quantity - Discount Correlation** — relationship between quantity ordered and discount percentage
-- **Region-Wise Revenue Share (%)** — contribution of geographic regions
-- **Revenue per State** — geographic map view
-
-## 6. Why These Methods Fit the Problem
-
-This is a BI problem, not a supervised-learning problem. A predictive model would answer a different question such as "what will a customer buy next?" or "what will future revenue be?" The goal here is descriptive and diagnostic:
-
-- aggregate raw transactions into interpretable KPIs
-- segment revenue by business-relevant dimensions
-- expose temporal and geographic structure
-- allow interactive filtering rather than force one fixed statistical model
-
-Tableau is therefore appropriate because the main deliverable is a reusable exploratory interface for non-technical stakeholders.
-
-## 7. Analytical Checks / Evaluation
-
-There is no train/test RMSE or classification accuracy because the project does not fit a predictive model. Instead, dashboard quality should be evaluated through KPI consistency and reconciliation.
-
-Useful checks include:
-
-$$
-R_{\text{total}}=\sum_m R_m,
-$$
-
-and, for mutually exclusive segment groups,
-
-$$
-R_{\text{total}}=\sum_g R_g.
-$$
-
-Revenue shares should satisfy
-
-$$
-0\le \text{RevenueShare}_g\le1,
-\qquad
-\sum_g\text{RevenueShare}_g=1.
-$$
-
-The geographic, demographic, and time-based views should all reconcile to the same filtered transaction population.
-
-## 8. Results and Interpretation
-
-The workbook verifies that the project was implemented as a multi-view customer and sales dashboard and that it includes dedicated analyses for revenue, age, gender, region, state, month, and the relationship between discount percentage and quantity ordered.
-
-The repository does not currently contain a plain-text export of the final dashboard KPI values, so this README intentionally does not invent exact revenue totals or segment percentages. The interactive Tableau workbook should be treated as the source of truth for those displayed values.
-
-The main analytical takeaway is that transaction data becomes more useful when decomposed into three complementary perspectives:
-
-1. **How much?** — total and monthly revenue
-2. **Who / what contributes?** — demographic, category, and regional segmentation
-3. **What relationships deserve deeper analysis?** — e.g. quantity ordered versus discount percentage
-
-## 9. Repository Contents
+## Repository structure
 
 ```text
 .
 ├── README.md
-├── CustomerAnalysis.twb
-└── sales_06_FY2020-21.csv.zip
+├── pyproject.toml
+├── scripts/
+│   └── download_data.py
+├── sql/
+│   ├── product_metrics.sql
+│   └── cohort_retention.sql
+├── src/product_ds/
+│   ├── data.py
+│   ├── metrics.py
+│   ├── experiment.py
+│   └── run_experiment.py
+├── tests/
+│   ├── test_metrics.py
+│   └── test_experiment.py
+└── docs/
+    ├── architecture.md
+    └── interview_guide.md
 ```
 
-## 10. Tableau Dashboard
+## Data sources
 
-[View the interactive Tableau dashboard](https://public.tableau.com/views/Wisesalescustomeranalysis/CustomerAnalysis?:language=zh-CN&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+### UCI Online Retail II
+Source: UCI Machine Learning Repository, dataset ID 502.
 
-## 11. Tools & Skills
+The dataset contains two years of transactions from a UK-based non-store online retailer. Typical fields include:
 
-Tableau · Business Intelligence · KPI Design · Customer Segmentation · Sales Analytics · Geographic Visualization · Exploratory Data Analysis · Data Storytelling
+- Invoice
+- StockCode
+- Description
+- Quantity
+- InvoiceDate
+- Price
+- Customer ID
+- Country
 
-## 12. Limitations
+The project derives revenue, cancellations, repeat purchases, cohort month, and retention from these raw transactions.
 
-- This is descriptive analytics, not causal analysis.
-- Segment differences should not be interpreted as causal effects of demographic or geographic variables.
-- The workbook contains a local source-file path in its metadata; Tableau Public is the most portable way to review the completed dashboard.
-- Exact KPI values are not duplicated in text here unless they can be verified directly from repository artifacts.
+### Criteo Uplift
+Source: Hugging Face dataset `criteo/criteo-uplift`.
+
+Expected columns include anonymized features `f0`-`f11`, `treatment`, `conversion`, `visit`, and `exposure`.
+
+Raw data is intentionally not committed to Git.
+
+## Core methods
+
+**SQL / analytics**
+- CTEs and window functions
+- monthly revenue and order volume
+- cancellation rate
+- repeat-purchase rate
+- cohort assignment and retention matrix
+- customer revenue concentration
+
+**Experimentation / statistics**
+- sample-ratio-mismatch checks
+- two-sample proportion tests
+- absolute and relative lift
+- confidence intervals
+- power / minimum sample size
+- regression-adjusted treatment effect
+- segment-level treatment-effect analysis
+
+## Testing
+
+The statistical core is unit tested. The current test suite verifies treatment-effect direction, sample-size calculation, sample-ratio checks, and product-metric logic.
+
+Run:
+
+```bash
+PYTHONPATH=src pytest -q
+```
+
+## Reproducibility
+
+The code never silently generates synthetic data when a public source is unavailable. Data-download scripts point to the original sources, and all derived metrics are computed from downloaded raw files.
+
+## Resume-safe description
+
+Before running full raw data, the project can truthfully be described as:
+
+> Built a reproducible e-commerce product analytics and experimentation platform using real retail transactions and randomized incrementality-test data, with SQL cohort/retention analysis and Python treatment-effect estimation.
+
+After running the full pipeline, replace generic wording with verified row counts, retention values, lift estimates, confidence intervals, and runtimes.
+
+## Why this is not a toy project
+
+The project separates observational analytics from randomized causal measurement, uses reproducible public data, modular code and tests rather than notebook-only analysis, explicitly checks experimental validity, and is designed around business decisions rather than a single model score.
