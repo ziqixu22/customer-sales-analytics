@@ -1,1 +1,0 @@
-This branch rebuilds the repository into an industry-style E-commerce Product Analytics & Experimentation Platform using reproducible public data sources (UCI Online Retail II and Criteo Uplift).
